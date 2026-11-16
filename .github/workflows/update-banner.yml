@@ -1,0 +1,28 @@
+name: update-banner
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  banner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerar banner
+        run: python3 build/make_banner.py
+        env:
+          BIRTHDATE: ${{ secrets.BIRTHDATE }}
+      - name: Commitar se mudou
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/banner.svg
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: atualiza banner"
+            git push
+          fi
