@@ -17,12 +17,16 @@ jobs:
         run: python3 build/make_banner.py
         env:
           BIRTHDATE: ${{ secrets.BIRTHDATE }}
+      - name: Gerar grafico
+        run: python3 build/make_graph.py
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Commitar se mudou
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/banner.svg
+          git add -A assets
           if ! git diff --cached --quiet; then
-            git commit -m "chore: atualiza banner"
+            git commit -m "chore: atualiza banner e grafico"
             git push
           fi
