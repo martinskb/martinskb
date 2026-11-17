@@ -10,10 +10,10 @@ ROOT = Path(__file__).resolve().parent.parent
 MONO = "ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', monospace"
 LEVELS = {
     "NONE": "#1a0b10",
-    "FIRST_QUARTER": "#4a1a28",
-    "SECOND_QUARTER": "#6a1530",
-    "THIRD_QUARTER": "#8b1a3a",
-    "FOURTH_QUARTER": "#b3294f",
+    "FIRST_QUARTILE": "#4a1a28",
+    "SECOND_QUARTILE": "#6a1530",
+    "THIRD_QUARTILE": "#8b1a3a",
+    "FOURTH_QUARTILE": "#b3294f",
 }
 QUERY = (
     "query($login:String!){user(login:$login){contributionsCollection{contributionCalendar"
