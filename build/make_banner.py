@@ -196,5 +196,6 @@ if __name__ == "__main__":
         slot, path = arg.split("=", 1)
         icons[int(slot)] = path
     out = ROOT / "assets" / "banner.svg"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(make_banner(icons, level=level_label()), encoding="utf-8")
     print(out)
