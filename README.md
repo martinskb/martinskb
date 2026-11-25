@@ -32,5 +32,5 @@ Faço sistemas de ponta a ponta para pequenos negócios, com foco no **back-end*
 
 <p align="center">
   <a href="https://martinskb.github.io">[ entrar na save room → martinskb.github.io ]</a><br>
-  <sub>contato: <a href="mailto:martinskb.contato@gmail.com">martinskb.contato@gmail.com</a></sub>
+  <sub>contato: <a href="mailto:martinskb.contato@gmail.com">martinskb.contato@gmail.com</a> · <a href="https://www.linkedin.com/in/kaiobarra">linkedin.com/in/kaiobarra</a></sub>
 </p>
