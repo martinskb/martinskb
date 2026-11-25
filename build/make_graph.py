@@ -46,8 +46,12 @@ def demo():
     return 200, weeks
 
 
+SEMANAS = 36  # so os ultimos meses: conta nova nao fica com um mar de quadrados vazios
+
+
 def render(total, weeks):
-    cell, gap, x0, y0 = 11, 2, 32, 70
+    weeks = weeks[-SEMANAS:]
+    cell, gap, x0, y0 = 16, 4, 40, 72
     rects = []
     for wi, week in enumerate(weeks):
         for di, level in enumerate(week):
@@ -58,10 +62,10 @@ def render(total, weeks):
                 f'width="{cell}" height="{cell}" rx="2" fill="{LEVELS[level]}"/>'
             )
     legend = "".join(
-        f'<rect x="{648 + i * 14}" y="176" width="11" height="11" rx="2" fill="{c}"/>'
+        f'<rect x="{648 + i * 14}" y="226" width="11" height="11" rx="2" fill="{c}"/>'
         for i, c in enumerate(LEVELS.values())
     )
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 210" width="100%" role="img" aria-label="Contribuições">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 256" width="100%" role="img" aria-label="Contribuições">
 <style>
 @keyframes pop{{from{{opacity:0}}to{{opacity:1}}}}
 @keyframes pulse{{0%,100%{{opacity:.7}}50%{{opacity:1}}}}
@@ -69,15 +73,15 @@ def render(total, weeks):
 .pl{{animation:pulse 2.4s ease-in-out infinite}}
 @media (prefers-reduced-motion:reduce){{.c,.pl{{animation:none}}}}
 </style>
-<rect width="800" height="210" fill="#0a0607"/>
-<rect x="0.5" y="0.5" width="799" height="209" fill="none" stroke="#3a1420"/>
+<rect width="800" height="256" fill="#0a0607"/>
+<rect x="0.5" y="0.5" width="799" height="255" fill="none" stroke="#3a1420"/>
 <text class="pl" x="32" y="40" font-family="{MONO}" font-size="13" letter-spacing="3" fill="#b3294f">[ HISTÓRICO ]</text>
 <text x="768" y="40" text-anchor="end" font-family="{MONO}" font-size="13" fill="#a8808c">{total} contribuições no último ano</text>
 <line x1="32" y1="54" x2="768" y2="54" stroke="#4a1a28"/>
 {"".join(rects)}
-<text x="620" y="186" text-anchor="end" font-family="{MONO}" font-size="11" fill="#7c4a5a">menos</text>
+<text x="620" y="236" text-anchor="end" font-family="{MONO}" font-size="11" fill="#7c4a5a">menos</text>
 {legend}
-<text x="724" y="186" font-family="{MONO}" font-size="11" fill="#7c4a5a">mais</text>
+<text x="724" y="236" font-family="{MONO}" font-size="11" fill="#7c4a5a">mais</text>
 </svg>
 '''
 

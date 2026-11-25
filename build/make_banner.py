@@ -93,7 +93,7 @@ STYLE = """<style>
 @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
 @keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
-@keyframes type{from{width:0}to{width:260px}}
+@keyframes type{from{width:0}to{width:300px}}
 .f{animation:float 4s ease-in-out infinite}
 .b{animation:blink 1s steps(1) infinite}
 .tw{animation:twinkle 3s ease-in-out infinite}
@@ -110,72 +110,84 @@ def icon_data_uri(path):
     return "data:image/png;base64," + base64.b64encode(data).decode()
 
 
+# grade 3x3 tipo inventario (lado direito)
+GRID_X, GRID_Y, CELL_W, CELL_H, GAP = 432, 80, 104, 80, 12
+
+
+def slot_box(slot):
+    col, row = (slot - 1) % 3, (slot - 1) // 3
+    x = GRID_X + col * (CELL_W + GAP)
+    y = GRID_Y + row * (CELL_H + GAP)
+    return x, y
+
+
 def slot_markup(slot, icons, captions=True):
-    cx, cy, size, rot = POSITIONS[slot]
+    x, y = slot_box(slot)
+    cx, cy, size = x + CELL_W / 2, y + 34, 40
+    _, _, _, rot = POSITIONS[slot]
     if slot in icons:
         half = size / 2
         body = (
-            f'<g transform="rotate({rot} {cx} {cy})"><image x="{cx - half}" y="{cy - half}" '
-            f'width="{size}" height="{size}" preserveAspectRatio="xMidYMid meet" '
-            f'href="{icon_data_uri(icons[slot])}"/></g>'
+            f'<image x="{cx - half}" y="{cy - half}" width="{size}" height="{size}" '
+            f'preserveAspectRatio="xMidYMid meet" href="{icon_data_uri(icons[slot])}"/>'
         )
     else:
         scale = size / 64
         base = COLORS[slot]
         common = 'stroke-linecap="round" stroke-linejoin="round" fill="none"'
         body = (
-            f'<g transform="translate({cx} {cy}) rotate({rot}) scale({scale:.3f})">'
-            f'<g stroke="{base}" color="{base}" stroke-width="2.4" {common}>{GLYPHS[slot]}</g>'
-            f'<g stroke="{WINE}" color="{WINE}" stroke-width="1" opacity="0.55" {common}>{GLYPHS[slot]}</g>'
+            f'<g transform="translate({cx} {cy}) rotate({rot / 2:.0f}) scale({scale:.3f})">'
+            f'<g stroke="{base}" color="{base}" stroke-width="2.6" {common}>{GLYPHS[slot]}</g>'
             f'</g>'
-        )
-    cap = ""
-    if captions:
-        cap = (
-            f'<text x="{cx}" y="{cy + size / 2 + 16}" text-anchor="middle" font-family="{MONO}" '
-            f'font-size="11" fill="#7c4a5a">{CAPTIONS[slot]}</text>'
         )
     dur = 3.4 + (slot % 4) * 0.6
     delay = -(slot * 0.7)
-    return f'<g class="f" style="animation-duration:{dur:.1f}s;animation-delay:{delay:.1f}s">{body}{cap}</g>'
+    frame = (
+        f'<rect x="{x}" y="{y}" width="{CELL_W}" height="{CELL_H}" rx="6" fill="#120a0d" stroke="#3a1420"/>'
+        f'<text x="{x + 8}" y="{y + 15}" font-family="{MONO}" font-size="9" fill="#5a2132">{slot:02d}</text>'
+    )
+    cap = ""
+    if captions:
+        cap = (
+            f'<text x="{cx}" y="{y + CELL_H - 10}" text-anchor="middle" font-family="{MONO}" '
+            f'font-size="10" fill="#8a5a69">{CAPTIONS[slot]}</text>'
+        )
+    return f'{frame}<g class="f" style="animation-duration:{dur:.1f}s;animation-delay:{delay:.1f}s">{body}</g>{cap}'
 
 
 def make_banner(icons=None, captions=True, level="??"):
     icons = icons or {}
-    spots = [(430, 60), (560, 150), (780, 60), (440, 200), (770, 330), (540, 390), (690, 190), (330, 170)]
-    marks = "".join(
-        f'<text class="tw" style="animation-delay:{-i * 0.9:.1f}s" x="{x}" y="{y}" '
-        f'font-family="{MONO}" font-size="14" fill="#5a2132">+</text>'
-        for i, (x, y) in enumerate(spots)
-    )
     slots = "".join(slot_markup(s, icons, captions) for s in sorted(POSITIONS))
     quote = (
         "Não sei como vou me sentir quando estiver morto,",
         "mas não quero me arrepender da maneira como vivi.",
     )
     clips = "".join(
-        f'<clipPath id="c{i}"><rect class="t{i}" x="32" y="{y - 20}" width="260" height="28"/></clipPath>'
-        for i, y in ((1, 188), (2, 218), (3, 248))
+        f'<clipPath id="c{i}"><rect class="t{i}" x="32" y="{y - 20}" width="300" height="28"/></clipPath>'
+        for i, y in ((1, 226), (2, 256), (3, 286))
     )
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="100%" role="img" aria-label="kaio">
+    gx_end = GRID_X + 3 * CELL_W + 2 * GAP
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="100%" role="img" aria-label="kaio barra, dev back-end júnior">
 {STYLE}
 <defs>{clips}</defs>
 <rect width="{W}" height="{H}" fill="#0a0607"/>
 <rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" fill="none" stroke="#3a1420"/>
 <text class="pl" x="32" y="44" font-family="{MONO}" font-size="13" letter-spacing="3" fill="{WINE}">[ SAVE ROOM ]</text>
-<text class="pl" x="{W - 32}" y="44" text-anchor="end" font-family="{MONO}" font-size="13" letter-spacing="3" fill="{WINE}">LV. {level}</text>
+<text x="{gx_end}" y="44" text-anchor="end" font-family="{MONO}" font-size="12" letter-spacing="3" fill="#7c4a5a">INVENTÁRIO</text>
 <line x1="32" y1="58" x2="{W - 32}" y2="58" stroke="#4a1a28"/>
-{marks}
-<text x="32" y="140" font-family="{MONO}" font-size="46" fill="#f3e4e8">kaio</text>
+<text x="32" y="128" font-family="{MONO}" font-size="42" fill="#f3e4e8">kaio barra</text>
+<text x="32" y="160" font-family="{MONO}" font-size="14" fill="{CORAL}">dev back-end júnior · belém, pa</text>
+<text class="pl" x="32" y="184" font-family="{MONO}" font-size="12" letter-spacing="2" fill="{WINE}">LV. {level}</text>
 <g font-family="{MONO}" font-size="16" fill="#cdb2ba">
-<text clip-path="url(#c1)" x="32" y="188"><tspan fill="{WINE}">&gt;</tspan> construindo coisas</text>
-<text clip-path="url(#c2)" x="32" y="218"><tspan fill="{WINE}">&gt;</tspan> aprendendo no caminho</text>
-<text clip-path="url(#c3)" x="32" y="248"><tspan fill="{WINE}">&gt;</tspan> salvando progresso<tspan class="b" fill="{CORAL}">_</tspan></text>
+<text clip-path="url(#c1)" x="32" y="226"><tspan fill="{WINE}">&gt;</tspan> construindo coisas</text>
+<text clip-path="url(#c2)" x="32" y="256"><tspan fill="{WINE}">&gt;</tspan> aprendendo no caminho</text>
+<text clip-path="url(#c3)" x="32" y="286"><tspan fill="{WINE}">&gt;</tspan> salvando progresso<tspan class="b" fill="{CORAL}">_</tspan></text>
 </g>
 {slots}
-<g font-family="{MONO}" font-size="14" font-style="italic" fill="#a8808c">
-<text x="32" y="362">{quote[0]}</text>
-<text x="32" y="386">{quote[1]}</text>
+<line x1="32" y1="352" x2="{W - 32}" y2="352" stroke="#2a0f18"/>
+<g font-family="{MONO}" font-size="13" font-style="italic" fill="#a8808c">
+<text x="32" y="378">{quote[0]}</text>
+<text x="32" y="398">{quote[1]}</text>
 </g>
 </svg>
 '''

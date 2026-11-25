@@ -17,6 +17,8 @@ jobs:
         run: python3 build/make_banner.py
         env:
           BIRTHDATE: ${{ secrets.BIRTHDATE }}
+      - name: Gerar cartoes
+        run: python3 build/make_cards.py
       - name: Gerar grafico
         run: python3 build/make_graph.py
         env:
