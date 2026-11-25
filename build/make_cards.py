@@ -20,9 +20,9 @@ EQUIPAMENTO = [
 ]
 
 MISSOES = {
-    "jacquemodas": ("Jacque Modas", "loja de roupas vendendo pelo WhatsApp:",
-                    "bot oficial da Meta, Pix automático e estoque", "por tamanho e cor sem venda duplicada.",
-                    ["Node.js", "PostgreSQL", "React"], "CLIENTE REAL"),
+    "vitrine": ("Vitrine", "loja vendendo pelo WhatsApp: bot oficial,",
+                "Pix automático, estoque sem venda duplicada", "e painel para o lojista.",
+                ["Node.js", "PostgreSQL", "React"], "EM USO NUMA LOJA"),
     "nexora": ("Nexora", "controle de vendas e estoque para o",
                "pequeno comerciante que ainda anota tudo", "no caderno, na planilha ou no WhatsApp.",
                ["Node.js", "MySQL", "React"], "ONLINE"),
