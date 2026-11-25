@@ -14,7 +14,7 @@ STYLE = """<style>
 EQUIPAMENTO = [
     ("back-end", ["Node.js", "Express", "Python", "FastAPI", "Java"]),
     ("dados", ["SQL", "PostgreSQL", "MySQL", "SQLite", "Supabase", "Excel"]),
-    ("front", ["React", "Vite", "PWA", "Flutter"]),
+    ("front", ["React", "Vite", "PWA"]),
     ("infra", ["Linux", "Docker", "Git", "Vercel", "Cloudflare"]),
     ("testes", ["Vitest", "Supertest"]),
 ]
